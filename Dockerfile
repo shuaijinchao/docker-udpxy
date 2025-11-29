@@ -19,8 +19,9 @@ RUN wget --no-check-certificate --tries=3 --timeout=30 --max-redirect=5 -O udpxy
     test -d udpxy-1.0.23-0 || (echo "Failed to extract archive or directory not found" && exit 1)
 
 # Build udpxy
+# Add -Wno-format-truncation to suppress format-truncation warnings
 RUN cd udpxy-1.0.23-0 && \
-    make all
+    make CFLAGS="-W -Wall -Werror --pedantic -Wno-format-truncation" all
 
 # Final stage: use Alpine for smaller image size
 FROM alpine:latest
