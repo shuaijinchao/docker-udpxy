@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  udpxy:
+    image: your-registry/udpxy:latest  # Replace with your registry address
+    container_name: iptv_udpxy
+    network_mode: host
+    environment:
+      - UDPXY_PORT=10011
+      - UDPXY_INTERFACE=eth0  # Modify according to actual network interface
+      - UDPXY_VERBOSE=true
+      - UDPXY_RENEW=300
+    restart: unless-stopped
