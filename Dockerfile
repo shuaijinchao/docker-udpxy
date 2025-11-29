@@ -40,8 +40,10 @@ COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Set default environment variables
+# Note: Empty values mean the parameter will not be added (udpxy will use its default)
 ENV UDPXY_PORT=4022
 ENV UDPXY_VERBOSE=false
+ENV UDPXY_STATS=false
 ENV UDPXY_RENEW=0
 
 # Use custom entrypoint
