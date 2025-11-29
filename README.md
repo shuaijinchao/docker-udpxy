@@ -7,7 +7,6 @@ A Docker image for [udpxy](https://www.udpxy.com/), a UDP-to-HTTP multicast traf
 ## Features
 
 - ✅ Configure port via environment variable
-- ✅ Configure network interface via environment variable
 - ✅ Support for other udpxy parameters via environment variables
 - ✅ Compatible with original command-line usage
 - ✅ Small image size (~15-20MB, Alpine-based)
@@ -24,12 +23,11 @@ docker run -d --name udpxy \
   --restart unless-stopped \
   shuaijinchao/udpxy:latest
 
-# Custom port and network interface
+# Custom port
 docker run -d --name udpxy \
   --network host \
   --restart unless-stopped \
   -e UDPXY_PORT=10011 \
-  -e UDPXY_INTERFACE=eth0 \
   shuaijinchao/udpxy:latest
 
 # Full configuration example
@@ -37,7 +35,6 @@ docker run -d --name udpxy \
   --network host \
   --restart unless-stopped \
   -e UDPXY_PORT=10011 \
-  -e UDPXY_INTERFACE=eth0 \
   -e UDPXY_VERBOSE=true \
   -e UDPXY_RENEW=300 \
   shuaijinchao/udpxy:latest
@@ -55,7 +52,6 @@ services:
     network_mode: host
     environment:
       - UDPXY_PORT=10011
-      - UDPXY_INTERFACE=eth0
       - UDPXY_VERBOSE=true
       - UDPXY_RENEW=300
     restart: unless-stopped
@@ -65,11 +61,11 @@ services:
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `UDPXY_PORT` | `4022` | Port for udpxy to listen on |
-| `UDPXY_INTERFACE` | `eth0` | Network interface for receiving multicast streams |
+| `UDPXY_PORT` | `4022` | Port for udpxy to listen on (equivalent to `-p` flag) |
 | `UDPXY_VERBOSE` | `false` | Enable verbose output (equivalent to `-v` flag) |
-| `UDPXY_TTL` | `0` | TTL value (equivalent to `-T` flag, `0` means not set) |
 | `UDPXY_RENEW` | `0` | Subscription renewal interval in seconds (equivalent to `-M` flag, `0` means not set) |
+
+**Note**: The `-T` flag (do NOT run as a daemon) is automatically added by the entrypoint script to ensure the process runs in foreground, which is required for Docker containers.
 
 ## Command-Line Usage (Alternative)
 
@@ -80,7 +76,7 @@ docker run -d --name udpxy \
   --network host \
   --restart unless-stopped \
   shuaijinchao/udpxy:latest \
-  -p 10011 -m eth0 -v -M 300
+  -p 10011 -v -M 300
 ```
 
 ## View Help
@@ -91,21 +87,9 @@ docker run --rm shuaijinchao/udpxy:latest help
 
 ## Notes
 
-1. **Network Interface**: The `UDPXY_INTERFACE` value must match your actual network interface name. Common values:
-   - `eth0` (traditional naming)
-   - `enp0s3`, `eno1` (systemd naming)
-   - `ens33` (VMware virtual NIC)
-   
-   Check your interface name with:
-   ```bash
-   ip addr show
-   # or
-   ifconfig
-   ```
+1. **Network Mode**: udpxy requires `host` network mode to receive multicast streams
 
-2. **Network Mode**: udpxy requires `host` network mode to receive multicast streams
-
-3. **Port Conflicts**: Ensure the specified port is not already in use
+2. **Port Conflicts**: Ensure the specified port is not already in use
 
 ## Example: IPTV Project Usage
 
@@ -119,7 +103,6 @@ services:
     network_mode: host
     environment:
       - UDPXY_PORT=10011
-      - UDPXY_INTERFACE=eth0
     restart: unless-stopped
 ```
 

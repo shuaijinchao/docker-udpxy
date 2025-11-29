@@ -55,7 +55,6 @@ docker run -d --name udpxy \
   --network host \
   --restart unless-stopped \
   -e UDPXY_PORT=10011 \
-  -e UDPXY_INTERFACE=eth0 \
   -e UDPXY_VERBOSE=true \
   -e UDPXY_RENEW=300 \
   your-registry/udpxy:latest
@@ -75,7 +74,6 @@ services:
     network_mode: host
     environment:
       - UDPXY_PORT=10011
-      - UDPXY_INTERFACE=eth0
       - UDPXY_VERBOSE=true
       - UDPXY_RENEW=300
     restart: unless-stopped
@@ -103,21 +101,13 @@ curl http://192.168.101.62:10011/rtp/239.3.1.129:8008
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `UDPXY_PORT` | `4022` | Port for udpxy to listen on |
-| `UDPXY_INTERFACE` | `eth0` | Network interface for receiving multicast streams |
+| `UDPXY_PORT` | `4022` | Port for udpxy to listen on (`-p` flag) |
 | `UDPXY_VERBOSE` | `false` | Enable verbose output (`-v` flag) |
-| `UDPXY_TTL` | `0` | TTL value (`-T` flag, `0` means not set) |
 | `UDPXY_RENEW` | `0` | Subscription renewal interval in seconds (`-M` flag, `0` means not set) |
 
+**Note**: The `-T` flag (do NOT run as a daemon) is automatically added by the entrypoint script to ensure the process runs in foreground, which is required for Docker containers.
+
 ## Common Issues
-
-### How to find network interface name?
-
-```bash
-ip addr show
-# or
-ifconfig
-```
 
 ### How to view udpxy logs?
 
@@ -133,14 +123,13 @@ docker logs -f iptv_udpxy
 # Using environment variables
 docker run --rm --network host \
   -e UDPXY_PORT=10011 \
-  -e UDPXY_INTERFACE=eth0 \
   -e UDPXY_VERBOSE=true \
   your-registry/udpxy:latest
 
 # Using command-line arguments (compatible with original usage)
 docker run --rm --network host \
   your-registry/udpxy:latest \
-  -p 10011 -m eth0 -v -M 300
+  -p 10011 -v -M 300
 ```
 
 ## Build Script Usage

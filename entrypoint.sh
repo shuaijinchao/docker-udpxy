@@ -8,25 +8,19 @@ if [ -n "${UDPXY_PORT}" ]; then
     ARGS="${ARGS} -p ${UDPXY_PORT}"
 fi
 
-# Network interface configuration
-if [ -n "${UDPXY_INTERFACE}" ]; then
-    ARGS="${ARGS} -m ${UDPXY_INTERFACE}"
-fi
-
 # Verbose output (-v)
 if [ "${UDPXY_VERBOSE}" = "true" ]; then
     ARGS="${ARGS} -v"
-fi
-
-# TTL configuration (-T)
-if [ -n "${UDPXY_TTL}" ] && [ "${UDPXY_TTL}" != "0" ]; then
-    ARGS="${ARGS} -T ${UDPXY_TTL}"
 fi
 
 # Subscription renewal interval (-M, in seconds)
 if [ -n "${UDPXY_RENEW}" ] && [ "${UDPXY_RENEW}" != "0" ]; then
     ARGS="${ARGS} -M ${UDPXY_RENEW}"
 fi
+
+# Always add -T to run in foreground (required for Docker containers)
+# -T means "do NOT run as a daemon", which keeps the process in foreground
+ARGS="${ARGS} -T"
 
 # If custom arguments are provided, use them directly (highest priority)
 if [ $# -gt 0 ]; then

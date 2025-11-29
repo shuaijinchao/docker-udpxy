@@ -42,7 +42,6 @@ echo ""
 echo "Use the following command to run the container:"
 echo "  docker run -d --name udpxy --network host \\"
 echo "    -e UDPXY_PORT=10011 \\"
-echo "    -e UDPXY_INTERFACE=eth0 \\"
 echo "    ${FULL_IMAGE_NAME}"
 echo ""
 

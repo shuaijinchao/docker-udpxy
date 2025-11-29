@@ -7,7 +7,6 @@ services:
     network_mode: host
     environment:
       - UDPXY_PORT=10011
-      - UDPXY_INTERFACE=eth0  # Modify according to actual network interface
       - UDPXY_VERBOSE=true
       - UDPXY_RENEW=300
     restart: unless-stopped

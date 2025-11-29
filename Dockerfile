@@ -41,9 +41,7 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Set default environment variables
 ENV UDPXY_PORT=4022
-ENV UDPXY_INTERFACE=eth0
 ENV UDPXY_VERBOSE=false
-ENV UDPXY_TTL=0
 ENV UDPXY_RENEW=0
 
 # Use custom entrypoint
