@@ -10,6 +10,8 @@ A Docker image for [udpxy](https://www.udpxy.com/), a UDP-to-HTTP multicast traf
 - ✅ Configure network interface via environment variable
 - ✅ Support for other udpxy parameters via environment variables
 - ✅ Compatible with original command-line usage
+- ✅ Small image size (~15-20MB, Alpine-based)
+- ✅ Multi-architecture support (amd64, arm64)
 
 ## Quick Start
 

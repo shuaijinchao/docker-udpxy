@@ -42,4 +42,5 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            UDPXY_SRC_URL=http://www.udpxy.com/download/udpxy/udpxy-src.tar.gz
+            UDPXY_VERSION=1.0.23-0-prod
+            UDPXY_SRC_URL=https://sourceforge.net/projects/udpxy/files/udpxy/Chipmunk-1.0/udpxy.1.0.23-0-prod.tar.gz/download

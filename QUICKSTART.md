@@ -24,7 +24,8 @@ docker build -t your-registry/udpxy:latest .
 
 # Build with custom source URL
 docker build \
-  --build-arg UDPXY_SRC_URL=http://www.udpxy.com/download/udpxy/udpxy-src.tar.gz \
+  --build-arg UDPXY_VERSION=1.0.23-0-prod \
+  --build-arg UDPXY_SRC_URL=https://sourceforge.net/projects/udpxy/files/udpxy/Chipmunk-1.0/udpxy.1.0.23-0-prod.tar.gz/download \
   -t your-registry/udpxy:latest .
 ```
 
@@ -161,11 +162,19 @@ The script will:
 1. Build the Docker image
 2. Optionally prompt to push to registry (if REGISTRY is set)
 
+## Image Details
+
+- **Base Image**: Alpine Linux (latest)
+- **Image Size**: ~15-20MB (much smaller than Debian-based images)
+- **Multi-stage Build**: Yes (builds in Alpine, runs in minimal Alpine)
+- **Supported Architectures**: linux/amd64, linux/arm64
+- **Udpxy Version**: 1.0.23-0-prod
+
 ## Project Structure
 
 ```
 docker-udpxy/
-├── Dockerfile                 # Docker image definition
+├── Dockerfile                 # Docker image definition (Alpine-based)
 ├── entrypoint.sh              # Startup script that builds command from env vars
 ├── build.sh                   # Build and push script
 ├── README.md                  # Usage documentation (for published image)

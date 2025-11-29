@@ -1,22 +1,33 @@
-FROM buildpack-deps as builder
+FROM alpine:latest as builder
 
+ARG UDPXY_VERSION=1.0.23-0-prod
 ARG UDPXY_SRC_URL
 
-ENV UDPXY_SRC_URL=${UDPXY_SRC_URL:-"http://www.udpxy.com/download/udpxy/udpxy-src.tar.gz"}
+# Install build dependencies
+RUN apk update && \
+    apk add --no-cache build-base wget
 
 WORKDIR /tmp
 
-RUN wget -O udpxy-src.tar.gz ${UDPXY_SRC_URL}
+# Download udpxy source code
+# Use provided URL or default to SourceForge
+ENV UDPXY_SRC_URL=${UDPXY_SRC_URL:-"https://sourceforge.net/projects/udpxy/files/udpxy/Chipmunk-1.0/udpxy.${UDPXY_VERSION}.tar.gz/download"}
 
-RUN tar -xzvf udpxy-src.tar.gz
+RUN wget --no-check-certificate --tries=3 --timeout=30 --max-redirect=5 -O udpxy.tar.gz ${UDPXY_SRC_URL} && \
+    tar -xzf udpxy.tar.gz && \
+    ls -la && \
+    test -d udpxy-1.0.23-0 || (echo "Failed to extract archive or directory not found" && exit 1)
 
-RUN cd udpxy-* && make && make install
+# Build udpxy
+RUN cd udpxy-1.0.23-0 && \
+    make all
 
-FROM debian:stable
+# Final stage: use Alpine for smaller image size
+FROM alpine:latest
 
 # Copy compiled binaries
-COPY --from=builder /usr/local/bin/udpxy /usr/local/bin/udpxy
-COPY --from=builder /usr/local/bin/udpxrec /usr/local/bin/udpxrec
+COPY --from=builder /tmp/udpxy-1.0.23-0/udpxy /usr/local/bin/udpxy
+COPY --from=builder /tmp/udpxy-1.0.23-0/udpxrec /usr/local/bin/udpxrec
 
 # Copy entrypoint script
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh

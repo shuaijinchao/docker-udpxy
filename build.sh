@@ -8,7 +8,8 @@ set -e
 IMAGE_NAME="${IMAGE_NAME:-udpxy}"
 IMAGE_TAG="${IMAGE_TAG:-latest}"
 REGISTRY="${REGISTRY:-}"  # Registry address, e.g., registry.example.com or docker.io/username
-UDPXY_SRC_URL="${UDPXY_SRC_URL:-http://www.udpxy.com/download/udpxy/udpxy-src.tar.gz}"
+UDPXY_VERSION="${UDPXY_VERSION:-1.0.23-0-prod}"
+UDPXY_SRC_URL="${UDPXY_SRC_URL:-https://sourceforge.net/projects/udpxy/files/udpxy/Chipmunk-1.0/udpxy.${UDPXY_VERSION}.tar.gz/download}"
 
 # Build full image name
 if [ -n "${REGISTRY}" ]; then
@@ -21,12 +22,14 @@ echo "=========================================="
 echo "Building udpxy custom image"
 echo "=========================================="
 echo "Image name: ${FULL_IMAGE_NAME}"
+echo "Udpxy version: ${UDPXY_VERSION}"
 echo "Source URL: ${UDPXY_SRC_URL}"
 echo "=========================================="
 echo ""
 
 # Build image
 docker build \
+    --build-arg UDPXY_VERSION="${UDPXY_VERSION}" \
     --build-arg UDPXY_SRC_URL="${UDPXY_SRC_URL}" \
     -t "${FULL_IMAGE_NAME}" \
     .
