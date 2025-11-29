@@ -21,8 +21,11 @@ RUN wget --no-check-certificate --tries=3 --timeout=30 --max-redirect=5 -O udpxy
 # Build udpxy
 # Add -Wno-format-truncation to suppress format-truncation warnings
 # Only build udpxy (not udpxrec) to avoid compilation errors
+# Remove udpxrec.c to prevent it from being compiled
 RUN cd udpxy-1.0.23-0 && \
-    make CFLAGS="-W -Wall -Werror --pedantic -Wno-format-truncation" udpxy
+    mv udpxrec.c udpxrec.c.bak && \
+    make CFLAGS="-W -Wall -Werror --pedantic -Wno-format-truncation" udpxy && \
+    mv udpxrec.c.bak udpxrec.c
 
 # Final stage: use Alpine for smaller image size
 FROM alpine:latest
