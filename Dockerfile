@@ -20,15 +20,16 @@ RUN wget --no-check-certificate --tries=3 --timeout=30 --max-redirect=5 -O udpxy
 
 # Build udpxy
 # Add -Wno-format-truncation to suppress format-truncation warnings
+# Only build udpxy (not udpxrec) to avoid compilation errors
 RUN cd udpxy-1.0.23-0 && \
-    make CFLAGS="-W -Wall -Werror --pedantic -Wno-format-truncation" all
+    make CFLAGS="-W -Wall -Werror --pedantic -Wno-format-truncation" udpxy
 
 # Final stage: use Alpine for smaller image size
 FROM alpine:latest
 
 # Copy compiled binaries
 COPY --from=builder /tmp/udpxy-1.0.23-0/udpxy /usr/local/bin/udpxy
-COPY --from=builder /tmp/udpxy-1.0.23-0/udpxrec /usr/local/bin/udpxrec
+# Note: udpxrec is not included due to compilation issues with newer GCC
 
 # Copy entrypoint script
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
