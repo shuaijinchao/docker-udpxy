@@ -1,5 +1,9 @@
 README.md
+QUICKSTART.md
 .dockerignore
 .git
 .gitignore
+.github
+build.sh
+docker-compose.example.yaml
 
